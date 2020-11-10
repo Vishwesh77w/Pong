@@ -1,0 +1,163 @@
+/* Pong by Vishwesh
+   Use '<' key to move the slab to the left and use '>' key to move the slab to the right.
+   Highest Score to date: 39 (by Vishwesh).
+   Try breaking the record!!
+*/
+
+// Variables
+float ballX, ballY;
+float rectX, rectY;
+
+float Xspeed = random(-4.5, 4.5);
+float Yspeed = -10;
+
+int score = -1;
+
+void setup() {
+  fullScreen();
+  ballX = width / 2;
+  ballY = height / 2;
+  rectX = width / 2;
+  rectY = height - 50;
+  rectMode(CENTER);
+  textAlign(CENTER);
+}
+
+void draw() {
+  background(0, 200, 255);
+  doEverything();
+}
+
+void doEverything() {
+
+  slab();
+
+  ball();
+  moveBall();
+  bounceBallWhenOnSlab();
+
+  playAgain();
+  showScore();
+
+  printLines();
+}
+
+void slab() {
+  noStroke();
+  fill(0);
+  rect(rectX, rectY, 170, 20);
+}
+
+void keyPressed() {
+  if (key == '.') {
+    rectX = rectX + 20;
+  } else if (key == ',') {
+    rectX = rectX -20;
+  }
+}
+
+void ball() {
+  noStroke();
+  fill(0);
+  ellipse(ballX, ballY, 20, 20);
+}
+
+void moveBall() {
+  if (ballX > width || ballX < 0) {
+    Xspeed = Xspeed * -1;
+  }
+
+  if (ballY < 0) {
+    Yspeed = Yspeed * -1;
+  }
+
+  ballX = ballX + Xspeed;
+  ballY = ballY + Yspeed;
+}
+
+void bounceBallWhenOnSlab() {
+
+  if (ballX > rectX - 85 &&
+    ballX < rectX + 85 &&
+    ballY + 10 > rectY - 10 &&
+    ballY < rectY - 5) {
+
+    Yspeed = Yspeed * -1.025;
+    Xspeed = random(-4.5, 4.5);
+  }
+}
+
+void mousePressed() {
+
+  if (mouseX > width / 2 - 150 &&
+    mouseX < width / 2 + 150 &&
+    mouseY > 240 && 
+    mouseY < 340 &&
+    ballY > height) {
+
+    Xspeed = random(-4.5, 4.5);
+    Yspeed = -10;
+    ballX = width / 2;
+    ballY = height / 2;
+    score = -1;
+
+    doEverything();
+  }
+}
+
+void showScore() {
+  if (ballY < 0) {
+    score = score + 1;
+  }
+
+  if (ballY > height) {
+
+
+    fill(255);
+    strokeWeight(2);
+    stroke(0);
+    rect(width / 2, height / 2 - 15, 330, 70);
+
+    fill(0);
+    textSize(40);
+    text("Your Score:", width / 2 - 30, height / 2);
+    text (score, width / 2 + 120, height / 2);
+  }
+}
+
+void playAgain() {
+  if (ballY > height) {
+    fill(255, 50, 0);
+    textSize(100);
+    text("YOU LOOSE!!", width / 2, 200);
+
+    if (mouseX > width / 2 - 150 &&
+      mouseX < width / 2 + 150 &&
+      mouseY > 240 && 
+      mouseY < 340) {
+      fill(75);
+    } else {
+      fill(0);
+    }
+
+    stroke(255);
+    strokeWeight(2);
+    rect(width / 2, 300, 300, 100);
+    fill(0, 255, 100);
+    textSize(50);
+    text("Play Again", width / 2, 315);
+  }
+}
+
+void printLines() {
+
+  // println("Yspeed:", Yspeed);
+  // println("Xspeed:", Xspeed);
+  // println(score);
+
+  fill(0);
+  textSize(20);
+  //text(Yspeed, 100, 100);
+  //text(Xspeed, 100, 200);
+  //text(score, 100, 300);
+}
